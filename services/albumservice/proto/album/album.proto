@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package go.micro.srv.album;
+
+service AlbumService {
+	rpc CreateAlbum(Album) returns (Response) {}
+	rpc CreateImage(stream UploadImageRequest) returns (Response) {}
+	rpc DeleteAlbum(DeleteRequest) returns (Response) {}
+	rpc DeleteImage(DeleteRequest) returns (Response) {}
+	rpc GetAlbum(GetRequest) returns (AlbumResponse) {}
+	rpc GetImage(GetRequest) returns (ImageResponse) {}
+	rpc ListAlbum(SearchRequest) returns (Albums) {}
+	rpc ListImage(SearchRequest) returns (Images) {}
+}
+
+message Album {
+	int64 id = 1;
+	int64 parentAlbum = 2;
+	string name = 3;
+	int64 createdAt = 4;
+	int64 updatedAt = 5;
+	string path = 6;
+}
+
+message UploadImageRequest {
+	oneof data {
+		ImageInfo info = 1;
+		bytes chunk = 2;
+	};
+}
+
+message ImageInfo {
+	string name = 1;
+	int64 albumId = 2;
+}
+
+message Albums {
+	repeated Album list = 1;
+	int64 count = 2;
+}
+
+message AlbumResponse {
+	Album album = 1;
+}
+
+message ImageResponse {
+	Image image = 1;
+}
+message Images {
+	repeated Image list = 1;
+	int64 count = 2;
+}
+
+message Image {
+	int64 id = 1;
+	int64 albumId = 2;
+	string name = 3;
+	string url = 4;
+	int64 createdAt = 5;
+	int64 updatedAt = 6;
+}
+
+
+message DeleteRequest {
+	int64 id = 1;
+}
+
+message GetRequest {
+	int64 id = 1;
+}
+
+message SearchRequest {
+	string query = 1;
+	int64 offset = 2;
+	int64 limit = 3;
+	int64 albumId = 4;
+  }
+
+message Response {
+	string msg = 1;
+}

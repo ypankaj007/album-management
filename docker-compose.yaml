@@ -1,0 +1,49 @@
+consul:
+  command: -server -bootstrap -rejoin 
+  image: progrium/consul:latest
+  ports:
+    - "8300:8300"
+    - "8400:8400"
+    - "8500:8500"
+    - "8600:53/udp"
+  links:
+    - mysql_db
+api:
+  build: ./api/apigateway
+  command: --registry_address=consul:8500
+  links:
+    - consul
+    - albumservice
+  ports:
+    - "8080:8080"
+  volumes:
+    - './rootfolder:/var/db'
+albumservice:
+  build: ./services/albumservice
+  command: --registry_address=consul:8500
+  links:
+    - consul
+    - mysql_db
+  volumes:
+    - './rootfolder:/var/db'
+consumer:
+  build: ./services/consumer
+  command: --registry_address=consul:8500
+  links:
+    - consul
+    - albumservice
+mysql_db:
+  image: "mysql:5.7"
+  container_name: 'mysql_db'
+  expose:
+    - '1306'
+  ports:
+    - '1306:1306'
+  environment:
+      MYSQL_USER: album
+      MYSQL_PASSWORD: album
+      MYSQL_ROOT_PASSWORD: album
+      MYSQL_DATABASE: album
+  volumes:
+    - './db:/etc/mysql/conf.d'
+    - './.mysql-data/db:/var/lib/mysql'

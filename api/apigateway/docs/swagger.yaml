@@ -1,0 +1,360 @@
+basePath: /api/v1
+definitions:
+  handler.albumReq:
+    properties:
+      name:
+        example: My Collection
+        type: string
+    required:
+    - name
+    type: object
+  handler.albumResponse:
+    properties:
+      data:
+        properties:
+          ParentAlbumId:
+            type: integer
+          createdAt:
+            type: integer
+          id:
+            type: integer
+          name:
+            type: string
+          path:
+            type: string
+          updatedAt:
+            type: integer
+        type: object
+      message:
+        type: string
+    type: object
+  handler.basicResponse:
+    properties:
+      data:
+        type: object
+      message:
+        type: string
+    type: object
+  handler.imageResponse:
+    properties:
+      data:
+        properties:
+          albumId:
+            type: integer
+          createdAt:
+            type: integer
+          id:
+            type: integer
+          name:
+            type: string
+          updatedAt:
+            type: integer
+          url:
+            type: string
+        type: object
+      message:
+        type: string
+    type: object
+  handler.listAlbumResponse:
+    properties:
+      data:
+        properties:
+          count:
+            type: integer
+          list:
+            items:
+              properties:
+                ParentAlbumId:
+                  type: integer
+                createdAt:
+                  type: integer
+                id:
+                  type: integer
+                name:
+                  type: string
+                path:
+                  type: string
+                updatedAt:
+                  type: integer
+              type: object
+            type: array
+        type: object
+      message:
+        type: string
+    type: object
+  handler.listImageResponse:
+    properties:
+      data:
+        properties:
+          count:
+            type: integer
+          list:
+            items:
+              properties:
+                albumId:
+                  type: integer
+                createdAt:
+                  type: integer
+                id:
+                  type: integer
+                name:
+                  type: string
+                updatedAt:
+                  type: integer
+                url:
+                  type: string
+              type: object
+            type: array
+        type: object
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: ypankaj007@gmail.com
+    name: API Support
+  description: Album and image management apis
+  license: {}
+  title: Album Management
+  version: "1.0"
+paths:
+  /albums/{albumId}:
+    delete:
+      consumes:
+      - application/json
+      description: Get album by id
+      parameters:
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Get album
+      tags:
+      - album
+    post:
+      consumes:
+      - application/json
+      description: Create album to store the images
+      parameters:
+      - description: Parent Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      - description: Album data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/handler.albumReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Create album
+      tags:
+      - album
+  /albums/{albumId}/get:
+    get:
+      consumes:
+      - application/json
+      description: Get album by id
+      parameters:
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.albumResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Get album
+      tags:
+      - album
+  /albums/{albumId}/images:
+    get:
+      consumes:
+      - application/json
+      description: List image in album
+      parameters:
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.listImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: List image
+      tags:
+      - image
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create Image
+      parameters:
+      - description: images
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Create Image
+      tags:
+      - image
+  /albums/{albumId}/images/{imageId}:
+    delete:
+      consumes:
+      - application/json
+      description: Get image by id
+      parameters:
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Get image
+      tags:
+      - image
+  /albums/{albumId}/images/{imageId}/get:
+    get:
+      consumes:
+      - application/json
+      description: Get image by id
+      parameters:
+      - description: Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.imageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: Get image
+      tags:
+      - image
+  /albums/{albumId}/list:
+    get:
+      consumes:
+      - application/json
+      description: List album in album
+      parameters:
+      - description: Parent Album ID
+        in: path
+        name: albumId
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.listAlbumResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.basicResponse'
+      summary: List album
+      tags:
+      - album
+swagger: "2.0"
