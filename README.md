@@ -3,7 +3,7 @@ Create, Get, List and Delete albums.
 Upload, Get, List and Delete images in album.
 
 ## Folder structure
-
+```bash
 ├── README.md
 ├── api                         // contains api services
 │   └── apigateway
@@ -68,7 +68,7 @@ Upload, Get, List and Delete images in album.
         ├── go.mod
         ├── go.sum
         └── main.go
-
+```
 ## AlbumService
 Album service responsible to all crud operations of albums and images
 ### generate proto 
